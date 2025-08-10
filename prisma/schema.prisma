@@ -1,0 +1,98 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            BigInt     @id @default(autoincrement())
+  name          String
+  email         String     @unique
+  passwordHash  String
+  role          Role       @default(READER)
+  bio           String?
+  avatarUrl     String?
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+  blogs         Blog[]
+  comments      Comment[]
+  likes         Like[]
+}
+
+model Blog {
+  id            BigInt      @id @default(autoincrement())
+  authorId      BigInt
+  title         String
+  slug          String      @unique
+  content       String
+  coverImage    String?
+  status        BlogStatus  @default(DRAFT)
+  publishedAt   DateTime?
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  author        User        @relation(fields: [authorId], references: [id])
+  tags          BlogTag[]
+  comments      Comment[]
+  likes         Like[]
+}
+
+model Tag {
+  id            BigInt      @id @default(autoincrement())
+  name          String      @unique
+  blogs         BlogTag[]
+}
+
+model BlogTag {
+  blogId        BigInt
+  tagId         BigInt
+  blog          Blog        @relation(fields: [blogId], references: [id], onDelete: Cascade)
+  tag           Tag         @relation(fields: [tagId], references: [id], onDelete: Cascade)
+  @@id([blogId, tagId])
+}
+
+model Comment {
+  id            BigInt      @id @default(autoincrement())
+  blogId        BigInt
+  userId        BigInt
+  content       String
+  createdAt     DateTime    @default(now())
+  blog          Blog        @relation(fields: [blogId], references: [id], onDelete: Cascade)
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model DashboardMetric {
+  id            BigInt      @id @default(autoincrement())
+  metricName    String
+  metricValue   BigInt
+  recordedAt    DateTime    @default(now())
+}
+
+model Like {
+  id            BigInt      @id @default(autoincrement())
+  blogId        BigInt
+  userId        BigInt
+  createdAt     DateTime    @default(now())
+  blog          Blog        @relation(fields: [blogId], references: [id], onDelete: Cascade)
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@unique([blogId, userId])
+}
+
+enum Role {
+  ADMIN
+  AUTHOR
+  READER
+}
+
+enum BlogStatus {
+  DRAFT
+  PUBLISHED
+}

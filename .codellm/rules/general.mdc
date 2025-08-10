@@ -1,0 +1,89 @@
+---
+description: This file provide general information about the project
+globs: 
+alwaysApply: true
+---
+
+# Portfolio Layout Guideline (Inspired by mattdeitke.com)
+
+## 1. Theme & Style
+- **Color palette**: Monochrome, but **softened** — avoid pure black `#000` and pure white `#fff`.
+  - Use off-white (e.g., `#f8f8f8`) for background.
+  - Use dark gray (e.g., `#1a1a1a` or `#222`) for text instead of pure black.
+- Minimalist typography with generous spacing.
+- No heavy gradients or flashy animations — focus on clarity and hierarchy.
+- Use subtle hover states for links (e.g., underline on hover).
+- Use TailwindCSS and typescript
+
+---
+
+## 2. Hero Section
+- Full-width, top-of-page.
+- Includes:
+  - **Name** prominently displayed.
+  - **Title/role** (e.g., “AI Researcher at Meta Superintelligence Lab”).
+  - Short **self-intro** in 1–2 lines.
+- Center-aligned or left-aligned depending on viewport width.
+
+---
+
+## 3. Contact & Location Info
+- Placed just below the intro.
+- Includes:
+  - Professional **email**.
+  - **Location**.
+- Styled as plain text — no heavy icons or borders.
+
+---
+
+## 4. News / Highlights Section
+- Chronological list of updates (new projects, awards, talks).
+- Each entry:
+  - **Date** (month/year).
+  - **Title** or event.
+  - Optional small **image** or badge.
+- Keep consistent spacing between items.
+
+---
+
+## 5. Publications / Projects Section
+- Structured as headings with grouped items.
+- Each item:
+  - **Title**.
+  - Short **description**.
+  - Links to **paper**, **demo**, or **code**.
+- Avoid overly large images — keep text focus.
+
+---
+
+## 6. Structure & Navigation
+- **Responsive design** — works on mobile and desktop.
+- Optional top navigation with anchor links to sections (`#news`, `#publications`, etc.).
+- Keep scrolling experience smooth and readable.
+
+---
+
+## 7. Optional Add-ons
+- Link to **CV** (PDF) in top section or footer.
+- Social media links (GitHub, X/Twitter, LinkedIn) in a subtle style.
+
+---
+
+## Suggested Folder Layout (Next.js)
+/api
+
+/pages
+│  index.tsx         # Main layout and sections
+│  _app.tsx          # Global styles, fonts
+/static
+│  cv.pdf
+/components
+│  Hero.tsx
+│  ContactInfo.tsx
+│  NewsList.tsx
+│  Publications.tsx
+/styles
+│  globals.css
+│  sections.css
+/public
+│  images/

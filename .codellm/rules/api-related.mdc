@@ -1,0 +1,51 @@
+---
+description: This is for api-relate task
+globs: 
+alwaysApply: true
+---
+
+# API Rule (Portfolio Project – Next.js)
+
+## General
+- Project type: **Portfolio** built with **Next.js**.  
+- **TanStack Query** manages all network state.  
+- **Server-side caching** for data that changes rarely (e.g., profile info, static project list). Frequently changing data should be fetched client-side with proper revalidation.  
+- **Axios** is the only HTTP client, instantiated and configured in one place.  
+
+---
+
+## Structure
+
+### `axiosClient.ts`
+- Export a singleton Axios instance with:
+  - **Base URL** from `.env` variables.
+  - **Request interceptors**: attach auth tokens (if needed), logging, custom headers.
+  - **Response interceptors**: centralized error handling (toast, logging).
+  - Optional middleware-like features: retries, response transformation.
+
+---
+
+### `any-api.ts`
+- Import `axiosClient` from `axiosClient.ts`.  
+- **Pattern:**
+  ```ts
+  // API object (pure Axios calls)
+  export const exampleApi = {
+    getExample: (params) => axiosClient.get("/example", { params }),
+    postExample: (data) => axiosClient.post("/example", data),
+  };
+
+  // Hooks (wrap API in TanStack Query)
+  export const useGetExample = (params, options) =>
+    useQuery({
+      queryKey: ["example", params],
+      queryFn: () => exampleApi.getExample(params),
+      staleTime: 60_000,
+      ...options, // allow user overrides
+    });
+
+  export const usePostExample = (options) =>
+    useMutation({
+      mutationFn: (data) => exampleApi.postExample(data),
+      ...options, // allow user overrides
+    });
