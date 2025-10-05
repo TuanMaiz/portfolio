@@ -3,11 +3,11 @@ import { blogsApi } from '@/lib/api';
 import BlogItem from '@/components/portfolio/BlogItem';
 
 interface Props {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }
 
 export default async function BlogPage({ params }: Props) {
-  const { slug } = params; // ✅ no await
+  const { slug } = await params;
 
   const queryClient = new QueryClient();
 

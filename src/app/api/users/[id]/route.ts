@@ -3,10 +3,11 @@ import { prisma } from '@/lib/prisma';
 
 export async function GET(
   _request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const userId = BigInt(params.id);
+    const { id } = await params;
+    const userId = BigInt(id);
 
     const user = await prisma.user.findUnique({
       where: { id: userId },
@@ -84,10 +85,11 @@ export async function GET(
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const userId = BigInt(params.id);
+    const { id } = await params;
+    const userId = BigInt(id);
     const body = await request.json();
     const { name, email, bio, avatarUrl, role } = body;
 
@@ -147,10 +149,11 @@ export async function PUT(
 
 export async function DELETE(
   _request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const userId = BigInt(params.id);
+    const { id } = await params;
+    const userId = BigInt(id);
 
     await prisma.user.delete({
       where: { id: userId },

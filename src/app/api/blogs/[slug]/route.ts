@@ -4,11 +4,12 @@ import { prisma } from '@/lib/prisma';
 // GET blog by slug
 export async function GET(
   request: NextRequest,
-  { params }: { params: { slug: string } }
+  { params }: { params: Promise<{ slug: string }> }
 ) {
   try {
+    const { slug } = await params;
     const blog = await prisma.blog.findUnique({
-      where: { slug: params.slug },
+      where: { slug },
       include: {
         author: {
           select: {
@@ -85,9 +86,10 @@ export async function GET(
 // UPDATE blog by slug
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { slug: string } }
+  { params }: { params: Promise<{ slug: string }> }
 ) {
   try {
+    const { slug } = await params;
     const body = await request.json();
     const { title, content, coverImage, status, tags } = body;
 
@@ -113,7 +115,7 @@ export async function PUT(
 
     if (tags) {
       await prisma.blogTag.deleteMany({
-        where: { blog: { slug: params.slug } },
+        where: { blog: { slug } },
       });
 
       updateData.tags = {
@@ -129,7 +131,7 @@ export async function PUT(
     }
 
     const blog = await prisma.blog.update({
-      where: { slug: params.slug },
+      where: { slug },
       data: updateData,
       include: {
         author: {
@@ -177,11 +179,12 @@ export async function PUT(
 // DELETE blog by slug
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { slug: string } }
+  { params }: { params: Promise<{ slug: string }> }
 ) {
   try {
+    const { slug } = await params;
     await prisma.blog.delete({
-      where: { slug: params.slug },
+      where: { slug },
     });
 
     return NextResponse.json({ message: 'Blog deleted successfully' }, { status: 200 });
